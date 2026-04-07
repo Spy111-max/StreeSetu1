@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreeSetu | Login & Signup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="shape shape-a"></div>
+    <div class="shape shape-b"></div>
+
+    <main class="auth-layout">
+      <section class="auth-brand">
+        <p class="pill">StreeSetu</p>
+        <h1>Where women build, sell, and rise together.</h1>
+        <p>
+          A trusted platform for women entrepreneurs and women shoppers.
+          Secure onboarding starts here.
+        </p>
+      </section>
+
+      <section class="auth-card">
+        <div class="tabs">
+          <button class="tab active" data-target="loginForm">Login</button>
+          <button class="tab" data-target="signupForm">Signup</button>
+        </div>
+
+        <form id="loginForm" class="form active">
+          <h2>Welcome back</h2>
+          <label>Email
+            <input name="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label>Password
+            <input name="password" type="password" placeholder="Enter password" required />
+          </label>
+          <button type="submit" class="btn-primary">Login</button>
+          <p class="helper">Demo account: demo@streesetu.in / Stree@123</p>
+          <a class="inline-link" href="/reset-password.html">Reset password</a>
+          <p id="loginMsg" class="msg"></p>
+        </form>
+
+        <form id="signupForm" class="form">
+          <h2>Create your account</h2>
+          <label>Full name
+            <input name="fullName" type="text" required />
+          </label>
+          <label>Email
+            <input name="email" type="email" required />
+          </label>
+          <label>Phone
+            <input name="phone" type="text" placeholder="+91-9876543210" required />
+          </label>
+          <label>City
+            <input name="city" type="text" required />
+          </label>
+          <label>Role
+            <select name="role" id="roleSelect">
+              <option value="customer">Women User (Buyer)</option>
+              <option value="entrepreneur">Women Entrepreneur</option>
+            </select>
+          </label>
+          <div id="entrepreneurFields" class="conditional-group" hidden>
+            <label>Business name
+              <input name="businessName" type="text" />
+            </label>
+            <label>Business category
+              <input name="businessCategory" type="text" placeholder="Fashion, Food, Skincare..." />
+            </label>
+            <label>Years in business
+              <input name="yearsInBusiness" type="number" min="0" step="1" />
+            </label>
+            <label>Business description
+              <input name="businessDescription" type="text" placeholder="Tell us about your business" />
+            </label>
+          </div>
+          <label>Password
+            <input name="password" type="password" minlength="8" required />
+          </label>
+          <label>Confirm password
+            <input name="confirmPassword" type="password" minlength="8" required />
+          </label>
+          <button type="submit" class="btn-primary">Signup</button>
+          <p id="signupMsg" class="msg"></p>
+        </form>
+
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
