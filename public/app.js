@@ -63,7 +63,7 @@ loginForm.addEventListener('submit', async (event) => {
     }
 
     setMessage(loginMsg, 'Login successful. Redirecting...', true);
-    window.location.href = '/dashboard';
+    window.location.href = data.redirectTo || '/normal_user_dashboard.html';
   } catch (error) {
     setMessage(loginMsg, 'Unable to login right now.');
   }

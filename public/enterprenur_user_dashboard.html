@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreeSetu | Business Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="dashboard-body" data-theme="light">
+    <main class="dashboard-shell">
+      <aside class="dashboard-sidebar">
+        <div class="brand-block">
+          <p class="pill">Creator Studio</p>
+          <h1 id="businessWelcome">Welcome</h1>
+          <p id="businessMeta" class="dashboard-meta"></p>
+        </div>
+        <nav class="dashboard-tabs" id="businessTabs">
+          <button class="dashboard-tab active" data-target="businessHomePanel">Home</button>
+          <button class="dashboard-tab" data-target="businessMessagesPanel">Messages</button>
+          <button class="dashboard-tab" data-target="businessCommunitiesPanel">Communities</button>
+          <button class="dashboard-tab" data-target="businessAnalyticsPanel">Analytics</button>
+          <button class="dashboard-tab" data-target="businessProfilePanel">Profile</button>
+          <button class="dashboard-tab" data-target="businessLaunchPanel">Launch Product</button>
+        </nav>
+        <button id="businessLogoutBtn" class="btn-ghost full-width">Logout</button>
+      </aside>
+
+      <section class="dashboard-main">
+        <section id="businessHomePanel" class="dashboard-panel active">
+          <div class="panel-head">
+            <div>
+              <h2>Business Feed</h2>
+              <p>Explore peer product ideas and manage your own launches like a social storefront.</p>
+            </div>
+          </div>
+          <div class="home-controls">
+            <input id="businessSearchInput" type="text" placeholder="Search market products" />
+            <select id="businessCategoryFilter">
+              <option value="all">All categories</option>
+            </select>
+            <select id="businessSortSelect">
+              <option value="newest">Newest</option>
+              <option value="price-low">Price: low to high</option>
+              <option value="price-high">Price: high to low</option>
+            </select>
+            <p id="businessFeedCount" class="feed-meta"></p>
+          </div>
+          <article class="card quick-compose-card">
+            <div class="card-head">
+              <h3>Quick Launch Composer</h3>
+              <p>Post a new product quickly like a social creator.</p>
+            </div>
+            <form id="businessQuickLaunchForm" class="quick-compose-form">
+              <input name="name" type="text" placeholder="Product name" required />
+              <input name="price" type="number" min="0" step="0.01" placeholder="Price" required />
+              <input name="stock" type="number" min="0" step="1" placeholder="Stock" required />
+              <input name="imageUrl" type="url" placeholder="Photo URL" />
+              <input name="description" type="text" placeholder="Short caption" required />
+              <button type="submit" class="btn-primary">Post Product</button>
+            </form>
+            <p id="businessQuickLaunchMsg" class="msg"></p>
+          </article>
+          <div class="story-strip creator-strip" id="businessCreatorStrip"></div>
+          <div class="reel-block">
+            <div class="card-head">
+              <h3>Market Reels</h3>
+              <p>Fast glance at trending women-led products.</p>
+            </div>
+            <div id="businessReels" class="reel-strip"></div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card feed-column">
+              <div class="card-head">
+                <h3>Women Entrepreneur Feed</h3>
+              </div>
+              <div id="businessOtherProducts" class="feed-list"></div>
+            </article>
+            <article class="card side-column">
+              <div class="card-head">
+                <h3>Your Storefront</h3>
+              </div>
+              <div id="businessMyProducts" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="businessMessagesPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Messages</h2>
+              <p>Manage B2C and B2B conversations.</p>
+            </div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card">
+              <div class="card-head">
+                <h3>B2C</h3>
+              </div>
+              <form id="businessB2CForm" class="form-stack compact-form">
+                <label>
+                  Buyer
+                  <select name="receiverId" id="businessBuyerSelect" required></select>
+                </label>
+                <label>
+                  Message
+                  <textarea name="messageText" rows="4" required></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Send to buyer</button>
+                <p id="businessB2CMsg" class="msg"></p>
+              </form>
+              <div id="businessB2CFeed" class="stack-list"></div>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h3>B2B</h3>
+              </div>
+              <form id="businessB2BForm" class="form-stack compact-form">
+                <label>
+                  Women entrepreneur
+                  <select name="receiverId" id="businessEntrepreneurSelect" required></select>
+                </label>
+                <label>
+                  Message
+                  <textarea name="messageText" rows="4" required></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Send to business</button>
+                <p id="businessB2BMsg" class="msg"></p>
+              </form>
+              <div id="businessB2BFeed" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="businessCommunitiesPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Communities</h2>
+              <p>Join women founder groups and topic-based communities.</p>
+            </div>
+          </div>
+          <div id="businessCommunities" class="community-grid"></div>
+        </section>
+
+        <section id="businessAnalyticsPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Analytics</h2>
+              <p>Track income, orders, and finance records by day, week, or month.</p>
+            </div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card">
+              <div class="stat-grid" id="businessTotals"></div>
+              <div class="card-head top-space">
+                <h3>Finance log</h3>
+              </div>
+              <form id="businessFinanceForm" class="form-stack compact-form">
+                <label>
+                  Period
+                  <select name="period">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </label>
+                <label>
+                  Record date
+                  <input name="recordDate" type="date" />
+                </label>
+                <label>
+                  Revenue
+                  <input name="revenue" type="number" step="0.01" min="0" />
+                </label>
+                <label>
+                  Expenses
+                  <input name="expenses" type="number" step="0.01" min="0" />
+                </label>
+                <label>
+                  Orders count
+                  <input name="ordersCount" type="number" min="0" />
+                </label>
+                <label>
+                  Notes
+                  <textarea name="notes" rows="3"></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Save finance record</button>
+                <p id="businessFinanceMsg" class="msg"></p>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h3>Income and orders</h3>
+              </div>
+              <div id="businessFinanceRecords" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="businessProfilePanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Profile</h2>
+              <p>Update your business profile, Instagram, picture, theme, and password.</p>
+            </div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card">
+              <div class="card-head">
+                <h3>Business settings</h3>
+              </div>
+              <form id="businessSettingsForm" class="form-stack">
+                <label>
+                  Full name
+                  <input name="fullName" type="text" required />
+                </label>
+                <label>
+                  Phone
+                  <input name="phone" type="text" required />
+                </label>
+                <label>
+                  City
+                  <input name="city" type="text" required />
+                </label>
+                <label>
+                  Business name
+                  <input name="businessName" type="text" required />
+                </label>
+                <label>
+                  Business category
+                  <input name="businessCategory" type="text" required />
+                </label>
+                <label>
+                  Business description
+                  <textarea name="businessDescription" rows="3" required></textarea>
+                </label>
+                <label>
+                  Instagram handle
+                  <input name="instagramHandle" type="text" placeholder="@yourbrand" />
+                </label>
+                <label>
+                  Profile picture URL
+                  <input name="profilePictureUrl" type="url" placeholder="https://..." />
+                </label>
+                <label>
+                  Theme
+                  <select name="themePreference">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </label>
+                <button type="submit" class="btn-primary">Save settings</button>
+                <p id="businessSettingsMsg" class="msg"></p>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h3>Reset password</h3>
+              </div>
+              <form id="businessPasswordForm" class="form-stack">
+                <label>
+                  Current password
+                  <input name="currentPassword" type="password" required />
+                </label>
+                <label>
+                  New password
+                  <input name="newPassword" type="password" required />
+                </label>
+                <label>
+                  Confirm new password
+                  <input name="confirmPassword" type="password" required />
+                </label>
+                <button type="submit" class="btn-primary">Update password</button>
+                <p id="businessPasswordMsg" class="msg"></p>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <section id="businessLaunchPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Launch Product</h2>
+              <p>Upload product details, photo, stock, and price.</p>
+            </div>
+          </div>
+          <div class="panel-grid single-col">
+            <article class="card narrow-card">
+              <form id="businessLaunchForm" class="form-stack">
+                <label>
+                  Product name
+                  <input name="name" type="text" required />
+                </label>
+                <label>
+                  Description
+                  <textarea name="description" rows="4" required></textarea>
+                </label>
+                <label>
+                  Photo URL
+                  <input name="imageUrl" type="url" placeholder="https://..." />
+                </label>
+                <label>
+                  Price
+                  <input name="price" type="number" min="0" step="0.01" required />
+                </label>
+                <label>
+                  Stock
+                  <input name="stock" type="number" min="0" step="1" value="1" required />
+                </label>
+                <button type="submit" class="btn-primary">Launch product</button>
+                <p id="businessLaunchMsg" class="msg"></p>
+              </form>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="modules/entrepreneur/main.js"></script>
+  </body>
+</html>

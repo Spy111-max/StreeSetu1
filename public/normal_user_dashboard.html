@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreeSetu | Buyer Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="dashboard-body" data-theme="light">
+    <main class="dashboard-shell">
+      <aside class="dashboard-sidebar">
+        <div class="brand-block">
+          <p class="pill">StreeSetu Social</p>
+          <h1 id="buyerWelcome">Welcome</h1>
+          <p id="buyerMeta" class="dashboard-meta"></p>
+        </div>
+        <nav class="dashboard-tabs" id="buyerTabs">
+          <button class="dashboard-tab active" data-target="buyerHomePanel">Home</button>
+          <button class="dashboard-tab" data-target="buyerMessagesPanel">Messages</button>
+          <button class="dashboard-tab" data-target="buyerCommunitiesPanel">Communities</button>
+          <button class="dashboard-tab" data-target="buyerSettingsPanel">Settings</button>
+        </nav>
+        <button id="buyerLogoutBtn" class="btn-ghost full-width">Logout</button>
+      </aside>
+
+      <section class="dashboard-main">
+        <section id="buyerHomePanel" class="dashboard-panel active">
+          <div class="panel-head">
+            <div>
+              <h2>Your Feed</h2>
+              <p>Discover new launches, shop instantly, and share product reviews.</p>
+            </div>
+          </div>
+          <div class="home-controls">
+            <input id="buyerSearchInput" type="text" placeholder="Search products or brands" />
+            <select id="buyerCategoryFilter">
+              <option value="all">All categories</option>
+            </select>
+            <select id="buyerSortSelect">
+              <option value="newest">Newest</option>
+              <option value="rating">Top rated</option>
+              <option value="price-low">Price: low to high</option>
+              <option value="price-high">Price: high to low</option>
+            </select>
+            <p id="buyerFeedCount" class="feed-meta"></p>
+          </div>
+          <div id="buyerStories" class="story-strip"></div>
+          <div class="reel-block">
+            <div class="card-head">
+              <h3>Quick Reels</h3>
+              <p>Swipe through new product highlights.</p>
+            </div>
+            <div id="buyerReels" class="reel-strip"></div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card feed-column">
+              <div class="card-head">
+                <h3>Product Feed</h3>
+                <p>Fresh posts from women-led businesses.</p>
+              </div>
+              <div id="buyerProducts" class="feed-list"></div>
+            </article>
+            <article class="card side-column">
+              <div class="card-head">
+                <h3>Community Reviews</h3>
+                <p>Latest honest feedback from buyers.</p>
+              </div>
+              <div id="buyerReviews" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="buyerMessagesPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Messages</h2>
+              <p>You can only message women entrepreneurs.</p>
+            </div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card">
+              <div class="card-head">
+                <h3>Start a conversation</h3>
+              </div>
+              <form id="buyerMessageForm" class="form-stack">
+                <label>
+                  Entrepreneur
+                  <select id="buyerReceiverSelect" name="receiverId" required></select>
+                </label>
+                <label>
+                  Message
+                  <textarea name="messageText" rows="5" placeholder="Write a thoughtful message..." required></textarea>
+                </label>
+                <button type="submit" class="btn-primary">Send message</button>
+                <p id="buyerMessageMsg" class="msg"></p>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h3>Message feed</h3>
+              </div>
+              <div id="buyerMessages" class="stack-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="buyerCommunitiesPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Communities</h2>
+              <p>Join conversations on business, wellness, finance, and more.</p>
+            </div>
+          </div>
+          <div id="buyerCommunities" class="community-grid"></div>
+        </section>
+
+        <section id="buyerSettingsPanel" class="dashboard-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Settings</h2>
+              <p>Update your profile, theme, and password.</p>
+            </div>
+          </div>
+          <div class="panel-grid two-col">
+            <article class="card">
+              <div class="card-head">
+                <h3>Profile</h3>
+              </div>
+              <form id="buyerSettingsForm" class="form-stack">
+                <label>
+                  Full name
+                  <input name="fullName" type="text" required />
+                </label>
+                <label>
+                  Phone
+                  <input name="phone" type="text" required />
+                </label>
+                <label>
+                  City
+                  <input name="city" type="text" required />
+                </label>
+                <label>
+                  Profile picture URL
+                  <input name="profilePictureUrl" type="url" placeholder="https://..." />
+                </label>
+                <label>
+                  Theme
+                  <select name="themePreference">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </label>
+                <button type="submit" class="btn-primary">Save settings</button>
+                <p id="buyerSettingsMsg" class="msg"></p>
+              </form>
+            </article>
+            <article class="card">
+              <div class="card-head">
+                <h3>Reset password</h3>
+              </div>
+              <form id="buyerPasswordForm" class="form-stack">
+                <label>
+                  Current password
+                  <input name="currentPassword" type="password" required />
+                </label>
+                <label>
+                  New password
+                  <input name="newPassword" type="password" required />
+                </label>
+                <label>
+                  Confirm new password
+                  <input name="confirmPassword" type="password" required />
+                </label>
+                <button type="submit" class="btn-primary">Update password</button>
+                <p id="buyerPasswordMsg" class="msg"></p>
+              </form>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="modules/buyer/main.js"></script>
+  </body>
+</html>

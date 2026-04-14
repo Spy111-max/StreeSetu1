@@ -1,24 +1,23 @@
-const welcomeText = document.getElementById('welcomeText');
-const logoutBtn = document.getElementById('logoutBtn');
+async function redirectByRole() {
+	try {
+		const response = await fetch('/api/me', { cache: 'no-store' });
+		if (!response.ok) {
+			window.location.replace('/');
+			return;
+		}
 
-async function loadUser() {
-  try {
-    const response = await fetch('/api/me');
-    if (!response.ok) {
-      window.location.href = '/';
-      return;
-    }
+		const data = await response.json();
+		const role = data?.user?.role;
 
-    const data = await response.json();
-    welcomeText.textContent = `Welcome, ${data.user.fullName}`;
-  } catch (error) {
-    window.location.href = '/';
-  }
+		if (role === 'entrepreneur') {
+			window.location.replace('/enterprenur_user_dashboard.html');
+			return;
+		}
+
+		window.location.replace('/normal_user_dashboard.html');
+	} catch (error) {
+		window.location.replace('/');
+	}
 }
 
-logoutBtn.addEventListener('click', async () => {
-  await fetch('/api/logout', { method: 'POST' });
-  window.location.href = '/';
-});
-
-loadUser();
+redirectByRole();
