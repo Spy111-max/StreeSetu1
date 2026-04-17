@@ -14,6 +14,11 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   font-family: 'Outfit', sans-serif;
@@ -283,6 +288,20 @@ select:focus {
   align-items: center;
 }
 
+.dashboard-head,
+.dashboard-main,
+.dashboard-sidebar,
+.card,
+.coming-card,
+.auth-card,
+.panel-grid > *,
+.home-controls > *,
+.post-card,
+.mini-card,
+.community-card {
+  min-width: 0;
+}
+
 .dashboard-head h1 {
   margin: 0.4rem 0 0;
   font-size: clamp(1.5rem, 3vw, 2.2rem);
@@ -448,7 +467,7 @@ select:focus {
 
 .home-controls {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: 0.6rem;
   align-items: center;
   padding: 0.65rem;
@@ -471,11 +490,10 @@ select:focus {
 
 .story-strip {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(84px, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
   gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.35rem;
+  overflow: clip;
+  padding-bottom: 0.1rem;
 }
 
 .story-item {
@@ -513,10 +531,9 @@ select:focus {
 
 .reel-strip {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(160px, 190px);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 0.7rem;
-  overflow-x: auto;
+  overflow: clip;
 }
 
 .reel-card {
@@ -923,9 +940,8 @@ textarea {
     bottom: 0.55rem;
     z-index: 50;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(92px, 1fr);
-    overflow-x: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
     gap: 0.45rem;
     padding: 0.5rem;
     border: 1px solid #dcc8b9;
@@ -947,11 +963,11 @@ textarea {
   }
 
   .story-strip {
-    grid-auto-columns: 88px;
+    grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
   }
 
   .reel-strip {
-    grid-auto-columns: minmax(136px, 150px);
+    grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
   }
 
   .home-controls {

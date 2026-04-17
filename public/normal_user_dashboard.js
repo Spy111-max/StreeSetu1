@@ -32,8 +32,9 @@ function escapeHtml(value) {
 }
 
 function fallbackPhoto(seedText) {
-  const seed = encodeURIComponent(seedText || 'StreeSetu');
-  return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='820' height='820' viewBox='0 0 820 820'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ffb58f'/><stop offset='100%' stop-color='%23ffd9c4'/></linearGradient></defs><rect width='820' height='820' fill='url(%23g)'/><text x='50%' y='54%' text-anchor='middle' font-size='58' fill='%233f2a1f' font-family='Outfit, sans-serif'>${seed}</text></svg>`;
+  const seed = String(seedText || 'Women handmade product').trim();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffb58f"/><stop offset="100%" stop-color="#ffd9c4"/></linearGradient></defs><rect width="900" height="900" fill="url(#g)"/><circle cx="190" cy="195" r="120" fill="rgba(255,255,255,0.24)"/><circle cx="705" cy="250" r="150" fill="rgba(255,255,255,0.18)"/><circle cx="520" cy="650" r="210" fill="rgba(255,255,255,0.12)"/><text x="50%" y="51%" text-anchor="middle" dominant-baseline="middle" font-size="58" font-weight="700" fill="#3f2a1f" font-family="Outfit, sans-serif">${seed}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 function currency(value) {
