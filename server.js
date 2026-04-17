@@ -57,6 +57,45 @@ function createToken() {
   return crypto.randomBytes(24).toString('hex');
 }
 
+const REAL_IMAGE_FALLBACKS = [
+  'https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/6863256/pexels-photo-6863256.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/5816284/pexels-photo-5816284.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=1200'
+];
+
+function hashString(input = '') {
+  let hash = 0;
+  const text = String(input || 'streesetu-image-seed');
+  for (let i = 0; i < text.length; i += 1) {
+    hash = (hash << 5) - hash + text.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function buildRealtimeImageUrl(seedText = '', extraTerms = []) {
+  const normalizedSeed = [seedText, ...extraTerms].filter(Boolean).join(' ').trim().toLowerCase();
+  const index = hashString(normalizedSeed || 'women entrepreneur product') % REAL_IMAGE_FALLBACKS.length;
+  return REAL_IMAGE_FALLBACKS[index];
+}
+
+function ensureProductImage(product, seedText = '', extraTerms = []) {
+  const imageUrl = (product.image_url || '').trim();
+  if (imageUrl && !/(source\.unsplash\.com|picsum\.photos|data:image\/svg\+xml)/i.test(imageUrl)) {
+    return product;
+  }
+
+  return {
+    ...product,
+    image_url: buildRealtimeImageUrl(seedText || product.name, extraTerms)
+  };
+}
+
 function createRateLimiter({ max, windowMs }) {
   return (req, res, next) => {
     const key = `${req.ip}:${req.path}`;
@@ -86,7 +125,7 @@ function setSecurityHeaders(req, res, next) {
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; img-src 'self' data: https://images.unsplash.com https://source.unsplash.com https://images.pexels.com; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
+    "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; img-src 'self' data: https://images.unsplash.com https://source.unsplash.com https://images.pexels.com https://picsum.photos https://i.picsum.photos https://fastly.picsum.photos; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
   );
   next();
 }
@@ -294,15 +333,17 @@ async function initDatabase() {
     for (const entrepreneur of entrepreneurs) {
       const brandName = entrepreneur.business_name || `${entrepreneur.full_name}'s Store`;
       const category = entrepreneur.business_category || 'Lifestyle';
+      const seededImageUrl = buildRealtimeImageUrl(`${brandName} ${category}`, [category]);
       await runQuery(
         `INSERT INTO products (entrepreneur_id, name, description, price, stock, image_url)
-         VALUES (?, ?, ?, ?, ?, '')`,
+         VALUES (?, ?, ?, ?, ?, ?)`,
         [
           entrepreneur.id,
           `${brandName} Signature Item`,
           `Popular ${category.toLowerCase()} product from ${brandName}.`,
           799,
-          18
+          18,
+          seededImageUrl
         ]
       );
     }
@@ -864,6 +905,14 @@ app.get('/api/dashboard/buyer/home', requireRole('customer'), async (req, res) =
        LIMIT 12`
     );
 
+    const productsWithImages = products.map((product) =>
+      ensureProductImage(
+        product,
+        `${product.name} ${product.entrepreneur_name || ''} ${product.business_name || ''}`,
+        [product.business_category || '']
+      )
+    );
+
     const reviews = await allQuery(
       `SELECT r.id, r.rating, r.comment, r.created_at, p.name AS product_name,
               reviewer.full_name AS buyer_name,
@@ -876,7 +925,7 @@ app.get('/api/dashboard/buyer/home', requireRole('customer'), async (req, res) =
        LIMIT 8`
     );
 
-    res.status(200).json({ products, reviews });
+    res.status(200).json({ products: productsWithImages, reviews });
   } catch (error) {
     res.status(500).json({ message: 'Unable to load buyer home.' });
   }
@@ -1035,6 +1084,14 @@ app.get('/api/dashboard/entrepreneur/home', requireRole('entrepreneur'), async (
       [req.session.user.id]
     );
 
+    const productsWithImages = products.map((product) =>
+      ensureProductImage(
+        product,
+        `${product.name} ${product.entrepreneur_name || ''} ${product.business_name || ''}`,
+        [product.business_category || '']
+      )
+    );
+
     const myProducts = await allQuery(
       `SELECT id, name, description, price, stock, image_url, created_at
        FROM products
@@ -1043,7 +1100,11 @@ app.get('/api/dashboard/entrepreneur/home', requireRole('entrepreneur'), async (
       [req.session.user.id]
     );
 
-    res.status(200).json({ products, myProducts });
+    const myProductsWithImages = myProducts.map((product) =>
+      ensureProductImage(product, `${product.name} ${product.description || ''}`)
+    );
+
+    res.status(200).json({ products: productsWithImages, myProducts: myProductsWithImages });
   } catch (error) {
     res.status(500).json({ message: 'Unable to load business home.' });
   }
@@ -1062,10 +1123,12 @@ app.post('/api/dashboard/entrepreneur/products', requireRole('entrepreneur'), as
       return;
     }
 
+    const finalImageUrl = imageUrl || buildRealtimeImageUrl(`${name} ${description}`);
+
     await runQuery(
       `INSERT INTO products (entrepreneur_id, name, description, price, stock, image_url)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [req.session.user.id, name, description, price, stock, imageUrl]
+      [req.session.user.id, name, description, price, stock, finalImageUrl]
     );
 
     res.status(201).json({ message: 'Product launched successfully.' });
@@ -1133,6 +1196,10 @@ app.get('/api/dashboard/entrepreneur/overview', requireRole('entrepreneur'), asy
       [req.session.user.id]
     );
 
+    const productsWithImages = products.map((product) =>
+      ensureProductImage(product, `${product.name} ${product.description || ''}`)
+    );
+
     const orders = await allQuery(
       `SELECT o.id, o.quantity, o.status, o.created_at, p.name AS product_name,
               buyer.full_name AS buyer_name, buyer.email AS buyer_email
@@ -1144,7 +1211,7 @@ app.get('/api/dashboard/entrepreneur/overview', requireRole('entrepreneur'), asy
       [req.session.user.id]
     );
 
-    res.status(200).json({ products, orders });
+    res.status(200).json({ products: productsWithImages, orders });
   } catch (error) {
     res.status(500).json({ message: 'Unable to load entrepreneur overview.' });
   }

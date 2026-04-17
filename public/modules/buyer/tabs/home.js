@@ -25,7 +25,9 @@ function renderHomeSkeleton() {
   buyerStories.innerHTML = Array.from({ length: 6 }, () => '<article class="story-item skeleton-story"></article>').join('');
   renderSkeleton(buyerReels, 4, 'reel-card skeleton-card');
   renderSkeleton(buyerProducts, 3, 'post-card skeleton-card');
-  renderSkeleton(buyerReviews, 4, 'mini-card skeleton-card');
+  if (buyerReviews) {
+    renderSkeleton(buyerReviews, 4, 'mini-card skeleton-card');
+  }
 }
 
 function renderStories(products) {
@@ -207,6 +209,10 @@ function renderReels(products) {
 }
 
 function renderReviews(reviews) {
+  if (!buyerReviews) {
+    return;
+  }
+
   if (!reviews.length) {
     renderEmpty(buyerReviews, 'Reviews will appear here after customers start engaging.');
     return;

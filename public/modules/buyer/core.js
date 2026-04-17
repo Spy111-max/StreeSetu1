@@ -12,10 +12,31 @@ export function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+const REAL_IMAGE_FALLBACKS = [
+  'https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/6863256/pexels-photo-6863256.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/5816284/pexels-photo-5816284.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=1200'
+];
+
+function hashString(input = '') {
+  let hash = 0;
+  const text = String(input || 'streesetu-image-seed');
+  for (let i = 0; i < text.length; i += 1) {
+    hash = (hash << 5) - hash + text.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
 export function fallbackPhoto(seedText) {
-  const seed = String(seedText || 'Women handmade product').trim();
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffb58f"/><stop offset="100%" stop-color="#ffd9c4"/></linearGradient></defs><rect width="900" height="900" fill="url(#g)"/><circle cx="190" cy="195" r="120" fill="rgba(255,255,255,0.24)"/><circle cx="705" cy="250" r="150" fill="rgba(255,255,255,0.18)"/><circle cx="520" cy="650" r="210" fill="rgba(255,255,255,0.12)"/><text x="50%" y="51%" text-anchor="middle" dominant-baseline="middle" font-size="58" font-weight="700" fill="#3f2a1f" font-family="Outfit, sans-serif">${seed}</text></svg>`;
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  const seed = String(seedText || 'women entrepreneur business product').trim().toLowerCase();
+  const index = hashString(seed) % REAL_IMAGE_FALLBACKS.length;
+  return REAL_IMAGE_FALLBACKS[index];
 }
 
 export function currency(value) {
