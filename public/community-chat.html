@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreeSetu | Community Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="community-page-body" data-theme="light">
+    <main class="community-page-shell">
+      <header class="community-page-header card">
+        <div>
+          <p class="pill">Community room</p>
+          <h1 id="communityPageTitle">Open a community</h1>
+          <p id="communityPageMeta">Choose a room on the left, join it, and start chatting.</p>
+        </div>
+        <a href="/dashboard" class="btn-ghost community-page-back">Back to dashboard</a>
+      </header>
+
+      <section class="community-page-layout">
+        <aside class="community-page-sidebar">
+          <div class="card-head">
+            <h3>Communities</h3>
+            <p>Pick a room to open the conversation.</p>
+          </div>
+          <div id="communityPageCommunities" class="community-page-list"></div>
+        </aside>
+
+        <section class="community-page-main">
+          <article class="card community-page-chat">
+            <div class="card-head">
+              <h3 id="communityPageChatTitle">Chat</h3>
+              <p id="communityPageChatMeta">Select a community to view messages.</p>
+            </div>
+            <div id="communityPageChatFeed" class="community-page-chat-feed"></div>
+            <form id="communityPageChatForm" class="form-stack community-chat-form">
+              <label>
+                Message
+                <textarea id="communityPageChatInput" name="messageText" rows="5" placeholder="Join a community to start chatting" required></textarea>
+              </label>
+              <button type="submit" class="btn-primary">Send message</button>
+              <p id="communityPageChatMsg" class="msg"></p>
+            </form>
+          </article>
+        </section>
+
+        <aside class="community-page-suggestions">
+          <div class="card-head">
+            <h3>Suggestions</h3>
+            <p>Recommended from your profile and activity.</p>
+          </div>
+          <div id="communityPageSuggestions" class="community-suggestion-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module" src="modules/community-chat.js"></script>
+  </body>
+</html>

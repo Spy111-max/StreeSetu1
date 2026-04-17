@@ -1485,6 +1485,10 @@ app.get('/dashboard-entrepreneur', requireAuth, requireRole('entrepreneur'), (re
   res.redirect('/enterprenur_user_dashboard.html');
 });
 
+app.get('/community-chat', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'community-chat.html'));
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

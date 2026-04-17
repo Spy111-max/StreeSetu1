@@ -138,10 +138,51 @@
           <div class="panel-head">
             <div>
               <h2>Communities</h2>
-              <p>Join women founder groups and topic-based communities.</p>
+              <p>Browse founder groups, keep suggestions at right, and chat inside this same tab.</p>
             </div>
           </div>
-          <div id="businessCommunities" class="community-grid"></div>
+          <div class="community-stage">
+            <div id="businessCommunityBrowseView" class="community-layout">
+              <div class="community-column">
+                <article class="card">
+                  <div class="card-head">
+                    <h3>Joined communities</h3>
+                    <p>Open chat for the communities you already joined.</p>
+                  </div>
+                  <div id="businessCommunities" class="community-grid"></div>
+                </article>
+              </div>
+              <article class="card community-suggestion-panel">
+                <div class="card-head">
+                  <h3>Suggested circles</h3>
+                  <p>Based on your business category and recent activity.</p>
+                </div>
+                <div id="businessCommunitySuggestions" class="community-suggestion-list"></div>
+              </article>
+            </div>
+
+            <div id="businessCommunityChatView" class="community-chat-workspace community-subpage" hidden>
+              <article class="card community-chat-shell community-subpage-card">
+                <div class="community-subpage-flag">Community Chat Page</div>
+                <div class="community-chat-head">
+                  <div>
+                    <h3 id="businessCommunityChatTitle">Community chat</h3>
+                    <p id="businessCommunityChatMeta">Select a community to view messages.</p>
+                  </div>
+                  <button id="businessCommunityBackBtn" type="button" class="btn-ghost">Back to community list</button>
+                </div>
+                <div id="businessCommunityChatFeed" class="community-chat-feed"></div>
+                <form id="businessCommunityChatForm" class="form-stack community-chat-form">
+                  <label>
+                    Message
+                    <textarea id="businessCommunityChatInput" name="messageText" rows="5" placeholder="Join a community to start chatting" required></textarea>
+                  </label>
+                  <button type="submit" class="btn-primary">Send message</button>
+                  <p id="businessCommunityChatMsg" class="msg"></p>
+                </form>
+              </article>
+            </div>
+          </div>
         </section>
 
         <section id="businessAnalyticsPanel" class="dashboard-panel">

@@ -1,28 +1,63 @@
-import { fetchJson, renderEmpty } from '../core.js';
+import { fetchJson, renderEmpty, setMessage, escapeHtml } from '../core.js';
+import { createCommunityCenter } from '../../shared/community-center.js';
 
-const businessCommunities = document.getElementById('businessCommunities');
+const businessCommunityBrowseView = document.getElementById('businessCommunityBrowseView');
+const businessCommunityChatView = document.getElementById('businessCommunityChatView');
+const businessCommunityBackBtn = document.getElementById('businessCommunityBackBtn');
 
-function renderCommunities(communities) {
-  if (!communities.length) {
-    renderEmpty(businessCommunities, 'No communities available.');
+function openCommunityWorkspace(communityId) {
+  if (!businessCommunityBrowseView || !businessCommunityChatView) {
     return;
   }
 
-  businessCommunities.innerHTML = communities
-    .map(
-      (community) => `
-        <article class="community-card">
-          <p class="pill small-pill">${community.topic}</p>
-          <h3>${community.title}</h3>
-          <p>${community.description}</p>
-          <span class="meta-line">${community.members_count} members</span>
-        </article>
-      `
-    )
-    .join('');
+  businessCommunityBrowseView.hidden = true;
+  businessCommunityChatView.hidden = false;
+  if (Number.isInteger(Number(communityId)) && Number(communityId) > 0) {
+    entrepreneurCommunityCenter.openCommunity(Number(communityId));
+  }
+}
+
+function closeCommunityWorkspace() {
+  if (!businessCommunityBrowseView || !businessCommunityChatView) {
+    return;
+  }
+
+  businessCommunityChatView.hidden = true;
+  businessCommunityBrowseView.hidden = false;
+}
+
+const entrepreneurCommunityCenter = createCommunityCenter({
+  role: 'entrepreneur',
+  fetchJson,
+  renderEmpty,
+  setMessage,
+  escapeHtml,
+  showJoinedOnlyList: true,
+  onOpenCommunity: openCommunityWorkspace,
+  elements: {
+    list: document.getElementById('businessCommunities'),
+    suggestions: document.getElementById('businessCommunitySuggestions'),
+    chatFeed: document.getElementById('businessCommunityChatFeed'),
+    chatTitle: document.getElementById('businessCommunityChatTitle'),
+    chatMeta: document.getElementById('businessCommunityChatMeta'),
+    form: document.getElementById('businessCommunityChatForm'),
+    input: document.getElementById('businessCommunityChatInput'),
+    message: document.getElementById('businessCommunityChatMsg')
+  }
+});
+
+if (businessCommunityBackBtn) {
+  businessCommunityBackBtn.addEventListener('click', closeCommunityWorkspace);
 }
 
 export async function loadEntrepreneurCommunities() {
-  const data = await fetchJson('/api/dashboard/communities');
-  renderCommunities(data.communities || []);
+  await entrepreneurCommunityCenter.load();
+
+  const snapshot = entrepreneurCommunityCenter.getSnapshot();
+  if (snapshot.joinedIds.length) {
+    openCommunityWorkspace(snapshot.activeCommunityId || snapshot.joinedIds[0]);
+    return;
+  }
+
+  closeCommunityWorkspace();
 }

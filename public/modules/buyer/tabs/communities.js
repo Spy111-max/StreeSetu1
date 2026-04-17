@@ -1,28 +1,63 @@
-import { fetchJson, renderEmpty } from '../core.js';
+import { fetchJson, renderEmpty, setMessage, escapeHtml } from '../core.js';
+import { createCommunityCenter } from '../../shared/community-center.js';
 
-const buyerCommunities = document.getElementById('buyerCommunities');
+const buyerCommunityBrowseView = document.getElementById('buyerCommunityBrowseView');
+const buyerCommunityChatView = document.getElementById('buyerCommunityChatView');
+const buyerCommunityBackBtn = document.getElementById('buyerCommunityBackBtn');
 
-function renderCommunities(communities) {
-  if (!communities.length) {
-    renderEmpty(buyerCommunities, 'No communities found.');
+function openCommunityWorkspace(communityId) {
+  if (!buyerCommunityBrowseView || !buyerCommunityChatView) {
     return;
   }
 
-  buyerCommunities.innerHTML = communities
-    .map(
-      (community) => `
-        <article class="community-card">
-          <p class="pill small-pill">${community.topic}</p>
-          <h3>${community.title}</h3>
-          <p>${community.description}</p>
-          <span class="meta-line">${community.members_count} members</span>
-        </article>
-      `
-    )
-    .join('');
+  buyerCommunityBrowseView.hidden = true;
+  buyerCommunityChatView.hidden = false;
+  if (Number.isInteger(Number(communityId)) && Number(communityId) > 0) {
+    buyerCommunityCenter.openCommunity(Number(communityId));
+  }
+}
+
+function closeCommunityWorkspace() {
+  if (!buyerCommunityBrowseView || !buyerCommunityChatView) {
+    return;
+  }
+
+  buyerCommunityChatView.hidden = true;
+  buyerCommunityBrowseView.hidden = false;
+}
+
+const buyerCommunityCenter = createCommunityCenter({
+  role: 'customer',
+  fetchJson,
+  renderEmpty,
+  setMessage,
+  escapeHtml,
+  showJoinedOnlyList: true,
+  onOpenCommunity: openCommunityWorkspace,
+  elements: {
+    list: document.getElementById('buyerCommunities'),
+    suggestions: document.getElementById('buyerCommunitySuggestions'),
+    chatFeed: document.getElementById('buyerCommunityChatFeed'),
+    chatTitle: document.getElementById('buyerCommunityChatTitle'),
+    chatMeta: document.getElementById('buyerCommunityChatMeta'),
+    form: document.getElementById('buyerCommunityChatForm'),
+    input: document.getElementById('buyerCommunityChatInput'),
+    message: document.getElementById('buyerCommunityChatMsg')
+  }
+});
+
+if (buyerCommunityBackBtn) {
+  buyerCommunityBackBtn.addEventListener('click', closeCommunityWorkspace);
 }
 
 export async function loadBuyerCommunities() {
-  const data = await fetchJson('/api/dashboard/communities');
-  renderCommunities(data.communities || []);
+  await buyerCommunityCenter.load();
+
+  const snapshot = buyerCommunityCenter.getSnapshot();
+  if (snapshot.joinedIds.length) {
+    openCommunityWorkspace(snapshot.activeCommunityId || snapshot.joinedIds[0]);
+    return;
+  }
+
+  closeCommunityWorkspace();
 }
